@@ -1,3 +1,6 @@
+/* create a local store, that holds bookmark info as an array
+    and has local vars to control DOM */
+
 const storeData = {
   bookmarks: [],
   adding: false,
@@ -6,13 +9,16 @@ const storeData = {
   filter: 0
 };
 
+/* store functions that CRUD data 
+    and can toggle local vars to expand/collapse info */
+
 function findBookmarkById(id) {
   let foundItem = storeData.bookmarks.find(bookmark => bookmark.id === id);
   return foundItem;
 }
 
 function createBookmark(formData) {
-  // Takes data in the shape of an object, and creates a new bookmark with that data and then pushes that new item to the store.
+  // Takes data in an object, and creates a new bookmark with that data and then pushes that new item to the store.
   const newBookmark = {
     isExpanded: false,
     inEditMode: false

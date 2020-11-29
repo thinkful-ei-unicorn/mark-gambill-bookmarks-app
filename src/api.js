@@ -1,6 +1,10 @@
 import store from './store';
 
+/* all API functions in here */
+
 const BASE_URL = 'https://thinkful-list-api.herokuapp.com/markg/bookmarks';
+
+/* fetch */
 
 const listApiFetch = function (...args) {
   let error;
@@ -24,6 +28,9 @@ const getBookmarks = function () {
   return listApiFetch(`${BASE_URL}`);
 };
 
+
+/* add bookmark to server */
+
 const addBookmark = function (bookmarkData) {
   return listApiFetch(`${BASE_URL}`, 
     {
@@ -33,6 +40,8 @@ const addBookmark = function (bookmarkData) {
     });
 };
 
+/* edit bookmark info on server */
+
 const updateBookmark = function (id, updateData) {
   return listApiFetch(`${BASE_URL}/${id}`, 
     {
@@ -41,6 +50,9 @@ const updateBookmark = function (id, updateData) {
       body: updateData
     });
 };
+
+
+/* delete bookmark from server */
 
 const deleteBookmark = function (id) {
   return listApiFetch(`${BASE_URL}/${id}`, 

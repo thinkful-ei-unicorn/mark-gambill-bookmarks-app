@@ -4,6 +4,8 @@ import store from './store';
 import api from './api';
 import templates from './templates';
 
+/* use fn.extend to take in form date and serialize it for jSon */
+
 
 $.fn.extend({
   serializeJson: function() {
@@ -14,42 +16,29 @@ $.fn.extend({
   }
 });
 
-function handleCloseError() {
-  $('main').on('click', '#close-error', () => {
-    store.setError(false);
-    renderError();
-  });
-}
 
-function handleAddNewBookmarkClicked() {
-  $('main').on('click', '.js-add-new-bookmark', function(event) {
-    store.storeData.adding = !store.storeData.adding;
-    render();
-  });
-}
+/* create function that looks at form submission, and certifies it meet required details */
 
-function handleCancelNewBookmarkClicked() {
-  $('main').on('click', '.js-cancel-new-bookmark', (event) => {
-    store.storeData.adding = !store.storeData.adding;
-    render();
-  });
-}
 
 function evaluateBookmarkSubmission(dataObject) {
   let data = JSON.parse(dataObject);
   
   if ((data.title.length === 0 || data.title === ' ') && data.url.length === 0 && data.rating.length === 0) {
-    store.storeData.errorMessage = 'Title, URL and Rating cannot be blank.';
+    store.storeData.errorMessage = 'ALL FIELDS, EXCEPT DESCRIPTION, MUST BE FILLED';
   } else if (data.title === ' ' || data.title.length <= 1) {
-    store.storeData.errorMessage = 'Title cannot be blank and must be longer than one character.';
+    store.storeData.errorMessage = 'MUST ENTER TITLE';
   } else if (!data.url.includes('http') || data.url.length <= 5) {
-    store.storeData.errorMessage = 'URL must be longer than 5 characters and include http(s)://.';
+    store.storeData.errorMessage = 'URL MUST INCLUDE http(s)://.';
   } else if (data.rating.length === 0) {
-    store.storeData.errorMessage = 'Rating cannot be empty and must have a value between 1 and 5.';
+    store.storeData.errorMessage = 'MUST CHOOSE RATING BETWEEN 1 AND 5';
   } else {
     store.storeData.errorMessage = '';
   }
 }
+
+
+/* event listening functions for when buttons are clicked */
+
 
 function handleAddBookmarkClicked() {
   $('main').on('submit', '.new-bookmark-form', (event) => {
@@ -73,6 +62,21 @@ function handleAddBookmarkClicked() {
       });
   });
 }
+
+function handleAddNewBookmarkClicked() {
+  $('main').on('click', '.js-add-new-bookmark', function(event) {
+    store.storeData.adding = !store.storeData.adding;
+    render();
+  });
+}
+
+function handleCancelNewBookmarkClicked() {
+  $('main').on('click', '.js-cancel-new-bookmark', (event) => {
+    store.storeData.adding = !store.storeData.adding;
+    render();
+  });
+}
+
 
 function handleBookmarkClicked() {
   $('main').on('click', '.bookmark', (event) => {
@@ -120,6 +124,15 @@ function handleCancelEditClicked() {
   });
 }
 
+
+function handleCloseError() {
+  $('main').on('click', '#close-error', () => {
+    store.setError(false);
+    renderError();
+  });
+}
+
+
 function handleSaveClicked() {
   $('main').on('submit', '.edit-bookmark-form', (event) => {
     event.preventDefault();
@@ -138,6 +151,8 @@ function handleSaveClicked() {
   });
 }
 
+/* combine all listeners into one function, for express export */
+
 function eventHandlers() {
   handleAddNewBookmarkClicked();
   handleCancelNewBookmarkClicked();
@@ -151,6 +166,8 @@ function eventHandlers() {
   handleSaveClicked();
 }
 
+/* error function to parse error info */
+
 function renderError() {
   if (store.storeData.error) {
     const errorElement = templates.generateError(store.storeData.errorMessage);
@@ -160,8 +177,10 @@ function renderError() {
   }
 }
 
+
+/* render function to control DOM */
+
 function render() {
-  // This page should render the page to the user, based on the state of the store.
   renderError();
   
   const bookmarks = [...store.storeData.bookmarks];

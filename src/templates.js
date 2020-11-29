@@ -1,5 +1,7 @@
 import store from './store';
 
+/* HTML template generating functions */
+
 const generateStarRating = function (bookmark) {
   let starRating;
   let starChecked = bookmark.rating;

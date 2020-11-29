@@ -7,9 +7,10 @@ import bookmarks from './bookmarks';
 import api from './api';
 import store from './store';
 
+/* this will be what runs on my page load, pulling any info from
+    the API server and generating the list */
 
-
-function pageLoad() {
+function main() {
   api.getBookmarks()
     .then(bookmarksList => {
       for (let i = 0; i < bookmarksList.length; i++) {
@@ -20,4 +21,4 @@ function pageLoad() {
   bookmarks.eventHandlers();
 }
 
-$(pageLoad);
+$(main);
