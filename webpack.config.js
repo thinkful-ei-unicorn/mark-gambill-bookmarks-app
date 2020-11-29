@@ -1,4 +1,7 @@
-/* eslint-disable no-undef */
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+
+
 module.exports = {
   entry: './src/index.js',
   output: {
