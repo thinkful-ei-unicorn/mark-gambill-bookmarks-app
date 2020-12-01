@@ -108,46 +108,11 @@ function handleDeleteClicked() {
   });
 }
 
-function handleEditClicked() {
-  $('main').on('click', '.js-edit', (event) => {
-    let bookmarkId = $(event.target).closest('.bookmark').data('bookmark-id');
-    store.toggleInEditMode(bookmarkId);
-    render();
-  });
-}
-
-function handleCancelEditClicked() {
-  $('main').on('click', '.js-cancel-edit', (event) => {
-    let bookmarkId = $(event.target).closest('.edit-bookmark').data('bookmark-id');
-    store.toggleInEditMode(bookmarkId);
-    render();
-  });
-}
-
 
 function handleCloseError() {
   $('main').on('click', '#close-error', () => {
     store.setError(false);
     renderError();
-  });
-}
-
-
-function handleSaveClicked() {
-  $('main').on('submit', '.edit-bookmark-form', (event) => {
-    event.preventDefault();
-    let id = $(event.target).closest('.edit-bookmark').data('bookmark-id');
-    let editData = $('.edit-bookmark-form').serializeJson();
-    evaluateBookmarkSubmission(editData);
-    api.updateBookmark(id, editData)
-      .then(() => {
-        store.findAndUpdateBookmark(id, editData);
-        store.toggleInEditMode(id);
-        render();
-      })
-      .catch(error => {
-        renderError();
-      });
   });
 }
 
@@ -161,9 +126,6 @@ function eventHandlers() {
   handleFilterSelected();
   handleDeleteClicked();
   handleCloseError();
-  handleEditClicked();
-  handleCancelEditClicked();
-  handleSaveClicked();
 }
 
 /* error function to parse error info */

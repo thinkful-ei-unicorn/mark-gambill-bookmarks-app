@@ -21,7 +21,6 @@ function createBookmark(formData) {
   // Takes data in an object, and creates a new bookmark with that data and then pushes that new item to the store.
   const newBookmark = {
     isExpanded: false,
-    inEditMode: false
   };
   storeData.bookmarks.push(Object.assign(formData, newBookmark));
 }
@@ -40,10 +39,6 @@ function toggleIsExpanded(id) {
   foundItem.isExpanded = !foundItem.isExpanded;
 }
 
-function toggleInEditMode(id) {
-  let foundItem = findBookmarkById(id);
-  foundItem.inEditMode = !foundItem.inEditMode;
-}
 
 function deleteBookmark(id) {
   // Takes an id, looks through the array of bookmarks and deletes the bookmark with the matching id.
@@ -61,6 +56,5 @@ export default {
   createBookmark,
   deleteBookmark,
   toggleIsExpanded,
-  toggleInEditMode,
   findAndUpdateBookmark
 };

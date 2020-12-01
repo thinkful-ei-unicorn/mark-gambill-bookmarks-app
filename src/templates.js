@@ -23,32 +23,6 @@ function simpleView(bookmark) {
       </li>`;
 }
 
-function editMode(bookmark) {
-  let bookmarkRating = generateStarRating(bookmark);
-  
-  return `<li class="edit-bookmark" data-bookmark-id="${bookmark.id}">
-        <div class="bookmark-title">
-          <h2>${bookmark.title}</h2>
-          <p>${bookmarkRating}</p>
-        </div>
-
-        <form class="edit-bookmark-form">
-          <label for="bookmark-title">Edit Title</label>
-          <input id="bookmark-title" name="title" type="text" value="${bookmark.title}" required>
-          <label for="bookmark-url">Edit Url</label>
-          <input id="bookmark-url" name="url" type="url" value="${bookmark.url}" required>
-          <label for="bookmark-rating">Edit Rating</label>
-          <input id="bookmark-rating" name="rating" type="number" min="1" max="5" value="${bookmark.rating}">
-          <label for="bookmark-desc">Edit Description</label>
-          <textarea id="bookmark-desc" name="desc">${bookmark.desc}</textarea>
-          <div class="form-buttons">
-            <button type="button" class="btn cancel-btn js-cancel-edit">Cancel</button>
-            <button type="submit" class="btn js-save">Save</button>
-          </div>
-        </form>
-      </li>`;
-}
-
 function expandedView(bookmark) {
   let bookmarkRating = generateStarRating(bookmark);
   
@@ -63,7 +37,6 @@ function expandedView(bookmark) {
         </div>
         <div class="bookmark-buttons">
           <button class="btn" onclick="window.open(href='${bookmark.url}')" type="button">Visit Website</button>
-          <button class="btn edit-btn js-edit">Edit</button>
           <button class="btn delete-btn js-delete" type="button">Delete</button>
         </div>
       </li>`;
@@ -71,9 +44,7 @@ function expandedView(bookmark) {
 
 function generateBookmarkElement(bookmark) {
   if (bookmark.rating >= store.storeData.filter) {
-    if (bookmark.inEditMode) {
-      return editMode(bookmark);
-    } else if (bookmark.isExpanded) {
+    if (bookmark.isExpanded) {
       return expandedView(bookmark);
     } else {
       return simpleView(bookmark);
