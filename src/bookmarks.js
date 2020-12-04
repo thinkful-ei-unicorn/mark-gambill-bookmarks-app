@@ -16,52 +16,27 @@ $.fn.extend({
   }
 });
 
+const handleAddBookmarkClicked = function () {
+  $('main').on('submit', '.new-bookmark-form', e => {
+    e.preventDefault();
 
-/* create function that looks at form submission, and certifies it meet required details */
+    let title = $(e.currentTarget).closest('.new-bookmark-form').find('#bookmark-title').val();
+    let url = $(e.currentTarget).closest('.new-bookmark-form').find('#bookmark-url').val();
+    let desc = $(e.currentTarget).closest('.new-bookmark-form').find('#bookmark-desc').val();
+    let rating = $(e.currentTarget).closest('.new-bookmark-form').find('#bookmark-rating').val();
 
-
-function evaluateBookmarkSubmission(dataObject) {
-  let data = JSON.parse(dataObject);
-  
-  if ((data.title.length === 0 || data.title === ' ') && data.url.length === 0 && data.rating.length === 0) {
-    store.storeData.errorMessage = 'ALL FIELDS, EXCEPT DESCRIPTION, MUST BE FILLED';
-  } else if (data.title === ' ' || data.title.length <= 1) {
-    store.storeData.errorMessage = 'MUST ENTER TITLE';
-  } else if (!data.url.includes('http') || data.url.length <= 5) {
-    store.storeData.errorMessage = 'URL MUST INCLUDE http(s)://.';
-  } else if (data.rating.length === 0) {
-    store.storeData.errorMessage = 'MUST CHOOSE RATING BETWEEN 1 AND 5';
-  } else {
-    store.storeData.errorMessage = '';
-  }
-}
-
-
-/* event listening functions for when buttons are clicked */
-
-
-function handleAddBookmarkClicked() {
-  $('main').on('submit', '.new-bookmark-form', (event) => {
-    event.preventDefault();
-    let newBookmark = $('.new-bookmark-form').serializeJson();
-    evaluateBookmarkSubmission(newBookmark);
-    api.addBookmark(newBookmark)
-      .then((data) => {
-        if (data.message) {
-          store.setError(true);
-          renderError();
-        } else {
-          store.setError(null);
-          store.createBookmark(data);
-          store.storeData.adding = !store.storeData.adding;
-          render();
-        }
+    api.createBookmark(title, url, desc, rating)
+      .then(newBookmark => {
+        store.createItem(newBookmark);
+        store.storeData.adding = !store.storeData.adding;
+        render();
       })
-      .catch(() => {
-        renderError();
+      .catch((err) => {
+        alert(err.message);
       });
   });
-}
+};
+
 
 function handleAddNewBookmarkClicked() {
   $('main').on('click', '.js-add-new-bookmark', function(event) {
@@ -77,12 +52,15 @@ function handleCancelNewBookmarkClicked() {
   });
 }
 
-
 function handleBookmarkClicked() {
-  $('main').on('click', '.bookmark', (event) => {
-    let bookmarkId = $(event.currentTarget).data('bookmark-id');
-    store.toggleIsExpanded(bookmarkId);
-    render();
+  $('main').on('click keypress', '.bookmark', (event) => { 
+    if (event.which === 13 || event.type === 'click') {
+      event.preventDefault();
+      
+      let bookmarkId = $(event.currentTarget).data('bookmark-id');
+      store.toggleIsExpanded(bookmarkId);
+      render();
+    }
   });
 }
 
@@ -95,16 +73,33 @@ function handleFilterSelected() {
 }
 
 function handleDeleteClicked() {
-  $('main').on('click', '.js-delete', (event) => {
-    let bookmarkId = $(event.target).closest('.bookmark').data('bookmark-id');
-    api.deleteBookmark(bookmarkId)
-      .then(() => {
-        store.deleteBookmark(bookmarkId);
-        render();
-      })
-      .catch(error => {
-        renderError();
-      });
+  $('main').on('click keypress', '.js-delete', (event) => {
+    if (event.which === 13 || event.type === 'click') {
+      event.preventDefault();
+      
+      let bookmarkId = $(event.target).closest('.bookmark').data('bookmark-id');
+      api.deleteBookmark(bookmarkId)
+        .then(() => {
+          store.deleteBookmark(bookmarkId);
+          render();
+        })
+        .catch(() => {
+          renderError();
+      
+        });
+    }
+  });
+}
+
+function handleUrlBtn() {
+  $('main').on('click keypress', '.url', (event) => { 
+    if (event.which === 13 || event.type === 'click') {
+      event.preventDefault();
+      document.getElementById('url').click();
+      
+      
+      render();
+    }
   });
 }
 
@@ -126,6 +121,7 @@ function eventHandlers() {
   handleFilterSelected();
   handleDeleteClicked();
   handleCloseError();
+  handleUrlBtn();
 }
 
 /* error function to parse error info */
@@ -133,10 +129,11 @@ function eventHandlers() {
 function renderError() {
   if (store.storeData.error) {
     const errorElement = templates.generateError(store.storeData.errorMessage);
-    $('.error-container').html(errorElement);
+    $('.error-area').html(errorElement);
   } else {
-    $('.error-container').empty();
+    $('.error-area').empty();
   }
+  handleCloseError();
 }
 
 

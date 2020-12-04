@@ -16,7 +16,7 @@ function simpleView(bookmark) {
   let bookmarkRating = generateStarRating(bookmark);
   
   return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
-        <div class="bookmark-title">
+        <div class="bookmark-title" tabindex="0">
           <h2>${bookmark.title}</h2>
           <p>${bookmarkRating}</p>
         </div>
@@ -27,7 +27,7 @@ function expandedView(bookmark) {
   let bookmarkRating = generateStarRating(bookmark);
   
   return `<li class="bookmark" data-bookmark-id="${bookmark.id}">
-        <div class="bookmark-title">
+        <div class="bookmark-title" tabindex="0">
           <h2>${bookmark.title}</h2>
           <p>${bookmarkRating}</p>
         </div>
@@ -36,7 +36,7 @@ function expandedView(bookmark) {
           ${(bookmark.desc.length === 0) ? '<p>No description.</p>' : `<p>${bookmark.desc}</p>`}
         </div>
         <div class="bookmark-buttons">
-          <button class="btn" onclick="window.open(href='${bookmark.url}')" type="button">Visit Website</button>
+          <button class="urlbtn" id='url' onclick="window.open(href='${bookmark.url}')" type="button">Visit Website</button>
           <button class="btn delete-btn js-delete" type="button">Delete</button>
         </div>
       </li>`;
@@ -83,13 +83,12 @@ function generateNewBookmarkForm() {
   
   return `<section class="my-bookmarks">
     <h2>Add New Bookmark</h2>
-    <section class="error-container">
-    </section>
+    
     <form action="" class="new-bookmark-form">
       <label for="bookmark-title">Title</label>
-      <input id="bookmark-title" name="title" type="text" placeholder="Title" required>
+      <input id="bookmark-title" name="title" type="text" placeholder="Title">
       <label for="bookmark-url">Url</label>
-      <input id="bookmark-url" name="url" type="url" placeholder="http://google.com" required>
+      <input id="bookmark-url" name="url" type="url" placeholder="http://google.com">
       <label for="bookmark-rating">Rating</label>
       <input id="bookmark-rating" name="rating" type="number" min="1" max="5" placeholder="1">
       <label for="bookmark-desc" for="desc">Description</label>

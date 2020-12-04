@@ -14,7 +14,7 @@ function main() {
   api.getBookmarks()
     .then(bookmarksList => {
       for (let i = 0; i < bookmarksList.length; i++) {
-        store.createBookmark(bookmarksList[i]);
+        store.createItem(bookmarksList[i]);
       }
       bookmarks.render();
     });

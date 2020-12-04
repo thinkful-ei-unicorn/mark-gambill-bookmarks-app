@@ -17,22 +17,13 @@ function findBookmarkById(id) {
   return foundItem;
 }
 
-function createBookmark(formData) {
-  // Takes data in an object, and creates a new bookmark with that data and then pushes that new item to the store.
-  const newBookmark = {
-    isExpanded: false,
-  };
-  storeData.bookmarks.push(Object.assign(formData, newBookmark));
-}
+const createItem = function (bookmark) {
+  bookmark.expanded = false;
+  storeData.bookmarks.push(bookmark);
+};
 
-function findAndUpdateBookmark(id, updateData) {
-  let parsedData = JSON.parse(updateData);
 
-  let foundItem = findBookmarkById(id);
-  let index = storeData.bookmarks.findIndex(bookmark => bookmark.id === id);
-  let mergedData = Object.assign(foundItem, parsedData);
-  storeData.bookmarks.splice(index, 1, mergedData);
-} 
+ 
 
 function toggleIsExpanded(id) {
   let foundItem = findBookmarkById(id);
@@ -53,8 +44,8 @@ function setError(value) {
 export default {
   storeData,
   setError,
-  createBookmark,
+  createItem,
   deleteBookmark,
   toggleIsExpanded,
-  findAndUpdateBookmark
+  
 };
